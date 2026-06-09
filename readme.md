@@ -2,8 +2,8 @@
 
 - We define a variable block with a name, a default value, and an optional type. By replacing hard-coded values with reference to the variable, we can update the value in one place, and it reflects everywhere
 
-`hcl`
-     resource "aws_s3_bucket" "terraform-bucket7733"{
+```
+        resource "aws_s3_bucket" "terraform-bucket7733"{
        bucket = "terraform-bucket7733"
 
        tags = {
@@ -31,7 +31,7 @@
      }
     }
 
-`hcl`
+```
 
 
 
@@ -39,7 +39,7 @@
 
  - when we are using this file we'll be using it for multiple environments so if I have to make it from dev to stage I have to do it in every single resource, right?
 
-`hcl`             
+```             
      variable "environment" {
        default = "dev"
        type = string
@@ -73,7 +73,7 @@
       Name = "Dev-EC2-Instance"
      }
      }
-  `hcl`
+  ```
 
 - In the variable section we define var = env and use it in the subsequent fields in the of resource. Here we are accessing the local name of the varaible (environment) not the actual value (default = "dev").
 
@@ -95,7 +95,7 @@
   
     **  it's string concatenation that we are doing right. We are first we need to resolve the value of this variable and then add it to hyphen **
 
-`hcl`
+```
      provider "aws" {
        region = "us-east-2"
      }
@@ -149,7 +149,7 @@
      }
     }
 
-`hcl`
+```
 
 - Here in the variables section we create a variables along with their name and use it in the local variable section.
 
