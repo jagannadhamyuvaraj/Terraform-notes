@@ -2,34 +2,36 @@
 
 - We define a variable block with a name, a default value, and an optional type. By replacing hard-coded values with reference to the variable, we can update the value in one place, and it reflects everywhere
 
+`hcl`
+     resource "aws_s3_bucket" "terraform-bucket7733"{
+       bucket = "terraform-bucket7733"
 
-resource "aws_s3_bucket" "terraform-bucket7733"{
-  bucket = "terraform-bucket7733"
+       tags = {
+       Name = "yuvaraj"
+       Environment = "dev"
+       }
+    }
 
-  tags = {
-    Name = "yuvaraj"
-    Environment = "dev"
+    resource "aws_vpc" "yuvaraj-vpc" {
+      cidr_block = "10.0.1.0/24"
+
+      tags = {
+      #Name = "sample_vpc"
+      Environment = "Dev"
+      Name = "Dev-VPC"
+     }
   }
-}
 
-resource "aws_vpc" "yuvaraj-vpc" {
-  cidr_block = "10.0.1.0/24"
-
-  tags = {
-    #Name = "sample_vpc"
-    Environment = "Dev"
-    Name = "Dev-VPC"
-  }
-}
-
-resource "aws_instance" "example" {
-  instance_type = "t2.micro"
+    resource "aws_instance" "example" {
+     instance_type = "t2.micro"
   
-  tags = {
-    Ennvironment = "Dev"
-    Name = "Dev-EC2-Instance"
+     tags = {
+     Ennvironment = "Dev"
+     Name = "Dev-EC2-Instance"
+     }
   }
-}
+
+`hcl`
 
 
 
@@ -37,41 +39,42 @@ resource "aws_instance" "example" {
 
  - when we are using this file we'll be using it for multiple environments so if I have to make it from dev to stage I have to do it in every single resource, right?
 
-                
-variable "environment" {
-  default = "dev"
-  type = string
-}
+`hcl`             
+     variable "environment" {
+       default = "dev"
+       type = string
+     }
 
 
-# create a s3 bucket
-resource "aws_s3_bucket" "terraform-bucket7733"{
-  bucket = "terraform-bucket7733"
+     # create a s3 bucket
+    resource "aws_s3_bucket" "terraform-bucket7733"{
+     bucket = "terraform-bucket7733"
 
-  tags = {
-    Name = "yuvaraj"
-    Environment = "var.environment"
-  }
-}
+     tags = {
+     Name = "yuvaraj"
+     Environment = "var.environment"
+     }
+   }
 
-resource "aws_vpc" "yuvaraj-vpc" {
-  cidr_block = "10.0.1.0/24"
+     resource "aws_vpc" "yuvaraj-vpc" {
+       cidr_block = "10.0.1.0/24"
 
-  tags = {
-    #Name = "sample_vpc"
-    Environment = "var.environment"
-    Name = "Dev-VPC"
-  }
-}
+     tags = {
+      #Name = "sample_vpc"
+      Environment = "var.environment"
+      Name = "Dev-VPC"
+      }
+    }
 
-resource "aws_instance" "example" {
-  instance_type = "t2.micro"
+    resource "aws_instance" "example" {
+      instance_type = "t2.micro"
   
-  tags = {
-    Ennvironment = "var.environment"
-    Name = "Dev-EC2-Instance"
-  }
-}
+     tags = {
+      Ennvironment = "var.environment"
+      Name = "Dev-EC2-Instance"
+     }
+   }
+  `hcl`
 
 - In the variable section we define var = env and use it in the subsequent fields in the of resource. Here we are accessing the local name of the varaible (environment) not the actual value (default = "dev").
 
@@ -93,7 +96,7 @@ resource "aws_instance" "example" {
   
     **  it's string concatenation that we are doing right. We are first we need to resolve the value of this variable and then add it to hyphen **
 
-
+`hcl`
 provider "aws" {
   region = "us-east-2"
 }
@@ -146,6 +149,8 @@ resource "aws_instance" "example" {
     Name = "Dev-EC2-Instance"
   }
 }
+
+`hcl`
 
 - Here in the variables section we create a variables along with their name and use it in the local variable section.
 
