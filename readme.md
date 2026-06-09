@@ -20,7 +20,7 @@
       Environment = "Dev"
       Name = "Dev-VPC"
      }
-  }
+    }
 
     resource "aws_instance" "example" {
      instance_type = "t2.micro"
@@ -29,7 +29,7 @@
      Ennvironment = "Dev"
      Name = "Dev-EC2-Instance"
      }
-  }
+    }
 
 `hcl`
 
@@ -44,9 +44,8 @@
        default = "dev"
        type = string
      }
-
-
-     # create a s3 bucket
+     
+     #create a s3 bucket
     resource "aws_s3_bucket" "terraform-bucket7733"{
      bucket = "terraform-bucket7733"
 
@@ -54,7 +53,7 @@
      Name = "yuvaraj"
      Environment = "var.environment"
      }
-   }
+    }
 
      resource "aws_vpc" "yuvaraj-vpc" {
        cidr_block = "10.0.1.0/24"
@@ -73,7 +72,7 @@
       Ennvironment = "var.environment"
       Name = "Dev-EC2-Instance"
      }
-   }
+     }
   `hcl`
 
 - In the variable section we define var = env and use it in the subsequent fields in the of resource. Here we are accessing the local name of the varaible (environment) not the actual value (default = "dev").
@@ -97,58 +96,58 @@
     **  it's string concatenation that we are doing right. We are first we need to resolve the value of this variable and then add it to hyphen **
 
 `hcl`
-provider "aws" {
-  region = "us-east-2"
-}
+     provider "aws" {
+       region = "us-east-2"
+     }
 
-# input variable
-variable "environment" {
-  default = "dev"
-  type = string
-}
-variable "region" {
-  default = "us-east-2"
-}
+    # input variable
+     variable "environment" {
+     default = "dev"
+     type = string
+     }
+    variable "region" {
+    default = "us-east-2"
+    }
 
-locals {
-  env = var.environment
-  bucket_name = "terraform-bucket7733-${var.environment}"
-  vpc_name = "${var.environment}-VPC"
-  region = var.region
-}
+    locals {
+     env = var.environment
+     bucket_name = "terraform-bucket7733-${var.environment}"
+     vpc_name = "${var.environment}-VPC"
+     region = var.region
+    }
 
 
-# create a s3 bucket
-resource "aws_s3_bucket" "first_bucket764"{
-  bucket = local.bucket_name
-  region = local.region
+     # create a s3 bucket
+     resource "aws_s3_bucket" "first_bucket764"{
+     bucket = local.bucket_name
+     region = local.region
 
-  tags = {
-    Name = local.bucket_name
-    Environment = "var.environment"
-  }
-}
-# create a vpc
-resource "aws_vpc" "yuvaraj-vpc" {
-  cidr_block = "10.0.1.0/24"
-  region = local.region
+     tags = {
+       Name = local.bucket_name
+       Environment = "var.environment"
+      }
+    }
+    # create a vpc
+    resource "aws_vpc" "yuvaraj-vpc" {
+    cidr_block = "10.0.1.0/24"
+    region = local.region
 
-  tags = {
+     tags = {
     #Name = "sample_vpc"
     Environment = "var.environment"
     Name = "local.vpc_name"
-  }
-}
+     }
+    }
 
-resource "aws_instance" "example" {
-  instance_type = "t2.micro"
-  region = local.region
+    resource "aws_instance" "example" {
+    instance_type = "t2.micro"
+    region = local.region
   
-  tags = {
+    tags = {
     Environment = "var.environment" #input variable
     Name = "Dev-EC2-Instance"
-  }
-}
+     }
+    }
 
 `hcl`
 
