@@ -63,7 +63,14 @@ resource "aws_instance" "example" {
   region = local.region
   
   tags = {
-    Environment = "var.environment" #input variable
+    Environment = var.environment #input variable
     Name = "Dev-EC2-Instance"
   }
+}
+
+output "vpc_id" {
+  value = aws_vpc.yuvaraj-vpc.id
+}
+output "ec2_id" {
+  value = aws_instance.example.id
 }

@@ -152,3 +152,32 @@ resource "aws_instance" "example" {
 - The locals are used in the resources section
 
 - when referencing local variable do not use " " between them
+
+# locals variables in Terraform
+
+  Local variables are used inside the tf files that does not have global access
+
+```
+           locals {
+           env = var.environment
+           bucket_name = "terraform-bucket7733-${var.environment}"
+           vpc_name = "${var.environment}-VPC"
+           region = var.region
+           }
+
+```
+
+# Variables precedence in the Terraform 
+
+  <li>
+Terraform uses the following order of precedence:
+
+<ul>Any -var and -var-file options on the command line in the order provided and variables from HCP Terraform</ul>
+<ul>Any *.auto.tfvars or *.auto.tfvars.json files in lexical order</ul>
+<ul>The terraform.tfvars.json file</ul>
+<ul>The terraform.tfvars file</ul>
+<ul>Environment variables</ul>
+<ul>The default argument of the variable block</ul>
+   
+   
+  </li>    
