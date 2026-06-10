@@ -2,34 +2,36 @@
 
 - We define a variable block with a name, a default value, and an optional type. By replacing hard-coded values with reference to the variable, we can update the value in one place, and it reflects everywhere
 
+```
+        resource "aws_s3_bucket" "terraform-bucket7733"{
+       bucket = "terraform-bucket7733"
 
-resource "aws_s3_bucket" "terraform-bucket7733"{
-  bucket = "terraform-bucket7733"
+       tags = {
+       Name = "yuvaraj"
+       Environment = "dev"
+       }
+    }
 
-  tags = {
-    Name = "yuvaraj"
-    Environment = "dev"
-  }
-}
+    resource "aws_vpc" "yuvaraj-vpc" {
+      cidr_block = "10.0.1.0/24"
 
-resource "aws_vpc" "yuvaraj-vpc" {
-  cidr_block = "10.0.1.0/24"
+      tags = {
+      #Name = "sample_vpc"
+      Environment = "Dev"
+      Name = "Dev-VPC"
+     }
+    }
 
-  tags = {
-    #Name = "sample_vpc"
-    Environment = "Dev"
-    Name = "Dev-VPC"
-  }
-}
-
-resource "aws_instance" "example" {
-  instance_type = "t2.micro"
+    resource "aws_instance" "example" {
+     instance_type = "t2.micro"
   
-  tags = {
-    Ennvironment = "Dev"
-    Name = "Dev-EC2-Instance"
-  }
-}
+     tags = {
+     Ennvironment = "Dev"
+     Name = "Dev-EC2-Instance"
+     }
+    }
+
+```
 
 
 
@@ -37,41 +39,41 @@ resource "aws_instance" "example" {
 
  - when we are using this file we'll be using it for multiple environments so if I have to make it from dev to stage I have to do it in every single resource, right?
 
-                
-variable "environment" {
-  default = "dev"
-  type = string
-}
+```             
+     variable "environment" {
+       default = "dev"
+       type = string
+     }
+     
+     #create a s3 bucket
+    resource "aws_s3_bucket" "terraform-bucket7733"{
+     bucket = "terraform-bucket7733"
 
+     tags = {
+     Name = "yuvaraj"
+     Environment = "var.environment"
+     }
+    }
 
-# create a s3 bucket
-resource "aws_s3_bucket" "terraform-bucket7733"{
-  bucket = "terraform-bucket7733"
+     resource "aws_vpc" "yuvaraj-vpc" {
+       cidr_block = "10.0.1.0/24"
 
-  tags = {
-    Name = "yuvaraj"
-    Environment = "var.environment"
-  }
-}
+     tags = {
+      #Name = "sample_vpc"
+      Environment = "var.environment"
+      Name = "Dev-VPC"
+      }
+    }
 
-resource "aws_vpc" "yuvaraj-vpc" {
-  cidr_block = "10.0.1.0/24"
-
-  tags = {
-    #Name = "sample_vpc"
-    Environment = "var.environment"
-    Name = "Dev-VPC"
-  }
-}
-
-resource "aws_instance" "example" {
-  instance_type = "t2.micro"
+    resource "aws_instance" "example" {
+      instance_type = "t2.micro"
   
-  tags = {
-    Ennvironment = "var.environment"
-    Name = "Dev-EC2-Instance"
-  }
-}
+     tags = {
+      Ennvironment = "var.environment"
+      Name = "Dev-EC2-Instance"
+     }
+     }
+  ```
 
 - In the variable section we define var = env and use it in the subsequent fields in the of resource. Here we are accessing the local name of the varaible (environment) not the actual value (default = "dev").
 
@@ -93,65 +95,68 @@ resource "aws_instance" "example" {
   
     **  it's string concatenation that we are doing right. We are first we need to resolve the value of this variable and then add it to hyphen **
 
+```
+     provider "aws" {
+       region = "us-east-2"
+     }
 
-provider "aws" {
-  region = "us-east-2"
-}
+    # input variable
+     variable "environment" {
+     default = "dev"
+     type = string
+     }
+    variable "region" {
+    default = "us-east-2"
+    }
 
-# input variable
-variable "environment" {
-  default = "dev"
-  type = string
-}
-variable "region" {
-  default = "us-east-2"
-}
-
-locals {
-  env = var.environment
-  bucket_name = "terraform-bucket7733-${var.environment}"
-  vpc_name = "${var.environment}-VPC"
-  region = var.region
-}
+    locals {
+     env = var.environment
+     bucket_name = "terraform-bucket7733-${var.environment}"
+     vpc_name = "${var.environment}-VPC"
+     region = var.region
+    }
 
 
-# create a s3 bucket
-resource "aws_s3_bucket" "first_bucket764"{
-  bucket = local.bucket_name
-  region = local.region
+     # create a s3 bucket
+     resource "aws_s3_bucket" "first_bucket764"{
+     bucket = local.bucket_name
+     region = local.region
 
-  tags = {
-    Name = local.bucket_name
-    Environment = "var.environment"
-  }
-}
-# create a vpc
-resource "aws_vpc" "yuvaraj-vpc" {
-  cidr_block = "10.0.1.0/24"
-  region = local.region
+     tags = {
+       Name = local.bucket_name
+       Environment = "var.environment"
+      }
+    }
+    # create a vpc
+    resource "aws_vpc" "yuvaraj-vpc" {
+    cidr_block = "10.0.1.0/24"
+    region = local.region
 
-  tags = {
+     tags = {
     #Name = "sample_vpc"
     Environment = "var.environment"
     Name = "local.vpc_name"
-  }
-}
+     }
+    }
 
-resource "aws_instance" "example" {
-  instance_type = "t2.micro"
-  region = local.region
+    resource "aws_instance" "example" {
+    instance_type = "t2.micro"
+    region = local.region
   
-  tags = {
+    tags = {
     Environment = "var.environment" #input variable
     Name = "Dev-EC2-Instance"
-  }
-}
+     }
+    }
+
+```
 
 - Here in the variables section we create a variables along with their name and use it in the local variable section.
 
 - The locals are used in the resources section
 
 - when referencing local variable do not use " " between them
+ HEAD
 
 # locals variables in Terraform
 
@@ -181,3 +186,5 @@ Terraform uses the following order of precedence:
    
    
   </li>    
+=======
+d1e441e0d0a42cd06ed407e6c0b5403874ed4b26
